@@ -360,8 +360,6 @@ class App:
                         time.sleep(10)
                         break
 
-
-        
     def update_volume(self, value):
         volume = float(value) / 100
         self.alert_sound.set_volume(volume)
