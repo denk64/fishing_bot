@@ -33,9 +33,12 @@ class App:
         self.root.title("Bob The Fisherman")
 
         self.last_detected_time = time.time()
-        self.last_levitate_buff = time.time()
-        self.last_open_shell_time = time.time()
-        self.last_mackarel_time = time.time()
+
+        self.last_pressed_button_1 = time.time()
+        self.last_pressed_button_2 = time.time()
+        self.last_pressed_button_3 = time.time()
+        self.last_pressed_button_4 = time.time()
+
         self.time_since_startet_to_fish = time.time()
         self.last_detected_timeout = time.time()
         self.detection_times = []
@@ -442,8 +445,8 @@ class App:
 
                     # If class_id 0 is detected at least 2 times in 2 seconds, execute action
 
-                    random_number_time = random.uniform(0.8, 1.9)
-                    random_number_time2 = random.uniform(0.5, 0.9)
+                    random_number_time = random.uniform(0.1, 0.2)
+                    random_number_time2 = random.uniform(0.2, 0.4)
                     random_number_coord = random.randint(1, 20)
 
                     self.alert_sound.play()
@@ -458,12 +461,19 @@ class App:
                         # Map the coordinates from the detection relative to the original monitor coordinates
                         x_center += left
                         y_center += top
-                        pyautogui.moveTo(x_center, y_center)
+                        pyautogui.moveTo(x_center*1.01, y_center)
                         fish_caught = True
-                        # time.sleep(0.3)
+                        time.sleep(random_number_time)
                         pyautogui.click(button='right')
-                        # time.sleep(0.8)
+                        time.sleep(random_number_time)
+                        pyautogui.click(button='right')
+                        time.sleep(random_number_time)
+                        pyautogui.click(button='right')
+                        time.sleep(random_number_time)
+                        pyautogui.click(button='right')
+                        time.sleep(0.05)
                         pyautogui.moveTo(x, y)
+
                         # time.sleep(random_number_time2 + random_number_time2)
                         # if self.recording_var.get() == 1:
                         #     self.save_buffer_to_file()
@@ -478,37 +488,46 @@ class App:
                     self.last_detected_timeout = time.time()
 
             # if time since last mackarel buff is greater than 5 minutes, press the insert key then update time
-            if time.time() - self.last_mackarel_time >= 20 and fish_caught == True:
+            if time.time() - self.last_pressed_button_1 >= 20 and fish_caught == True:
+                pyautogui.press('pagedown')
+                time.sleep(0.05)
+                self.last_pressed_button_1 = time.time()
+                
+
+            # if time since last mackarel buff is greater than 5 minutes, press the insert key then update time
+            if time.time() - self.last_pressed_button_2 >= 900 and fish_caught == True:
                 pyautogui.press('pageup')
-                self.last_mackarel_time = time.time()
+                time.sleep(0.05)
+                self.last_pressed_button_2 = time.time()
                 
             # if time since last levitate buff is greater than 10 minutes press home key then update time
-            if time.time() - self.last_levitate_buff >= 580 and fish_caught == True:
+            if time.time() - self.last_pressed_button_3 >= 250 and fish_caught == True:
                 pyautogui.press('home')
                 time.sleep(4)
-                self.last_levitate_buff = time.time()
+                self.last_pressed_button_3 = time.time()
 
-            if time.time() - self.last_open_shell_time >= 10 and fish_caught == True:
+            if time.time() - self.last_pressed_button_4 >= 20 and fish_caught == True:
                 pyautogui.press('insert')
-                self.last_open_shell_time = time.time()
+                time.sleep(0.05)
+                self.last_pressed_button_4 = time.time()
 
-            if time.time() - self.last_sold_items >= 1800 and fish_caught == True:
-                # press numpad 1 to mount
-                pyautogui.press('num1')
-                # wait to mount
-                time.sleep(3)
-                # press numpad 2 to target the vendor
-                pyautogui.press('num2')
-                # wait 1 sec
-                time.sleep(1)
-                # press page down to sell
-                pyautogui.press('pagedown')
-                # wait 10 seconds
-                time.sleep(10)
-                # press numpad 1 to dismount
-                pyautogui.press('num1')
+            # if time.time() - self.last_sold_items >= 1800 and fish_caught == True:
+            #     # press numpad 1 to mount
+            #     pyautogui.press('num1')
+            #     # wait to mount
+            #     time.sleep(3)
+            #     # press numpad 2 to target the vendor
+            #     pyautogui.press('num2')
+            #     # wait 1 sec
+            #     time.sleep(1)
+            #     # press page down to sell
+            #     pyautogui.press('pagedown')
+            #     # wait 10 seconds
+            #     time.sleep(10)
+            #     # press numpad 1 to dismount
+            #     pyautogui.press('num1')
 
-                self.last_sold_items = time.time()
+            #     self.last_sold_items = time.time()
 
             # if time.time() - self.last_detected_timeout >= 580:
             #     os._exit(0)
@@ -527,6 +546,9 @@ class App:
             # If class_id 1 or 0 are not detected for 5 seconds, press the home key
             if fish_caught or (time.time() - self.last_detected_time >= 5):
                 self.last_detected_time = time.time()
+                # Scroll up
+                for i in range(20):
+                    pyautogui.scroll(1)
                 time.sleep(0.1)
                 fish_caught = False
                 pyautogui.press('end')
